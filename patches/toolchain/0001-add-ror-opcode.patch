@@ -1,0 +1,37 @@
+diff --git a/include/opcode/riscv-opc.h b/include/opcode/riscv-opc.h
+index 1c649628..1906407c 100644
+--- a/include/opcode/riscv-opc.h
++++ b/include/opcode/riscv-opc.h
+@@ -3823,6 +3823,9 @@
+ #define MASK_MIPS_PAUSE  0xffffffff
+ #define MATCH_MIPS_PREF 0x0000000b
+ #define MASK_MIPS_PREF 0xe000707f
++/* Custom RISC-V extension: Rotate Right (ror) */
++#define MATCH_ROR 0x0200000b    /* funct7=0x01, funct3=0, opcode=CUSTOM_0 (0x0b) */
++#define MASK_ROR  0xfe00707f
+ /* Unprivileged Counter/Timers CSR addresses.  */
+ #define CSR_CYCLE 0xc00
+ #define CSR_TIME 0xc01
+@@ -4978,6 +4981,8 @@ DECLARE_INSN(mips_ehb, MATCH_MIPS_EHB, MASK_MIPS_EHB)
+ DECLARE_INSN(mips_ihb, MATCH_MIPS_IHB, MASK_MIPS_IHB)
+ DECLARE_INSN(mips_pause, MATCH_MIPS_PAUSE, MASK_MIPS_PAUSE)
+ DECLARE_INSN(mips_pref, MATCH_MIPS_PREF, MASK_MIPS_PREF)
++/* Custom RISC-V extension: Rotate Right (ror) */
++DECLARE_INSN(ror, MATCH_ROR, MASK_ROR)
+ #endif /* DECLARE_INSN */
+ #ifdef DECLARE_CSR
+ /* Unprivileged Counter/Timers CSRs.  */
+diff --git a/opcodes/riscv-opc.c b/opcodes/riscv-opc.c
+index 56ef62a6..8b476e72 100644
+--- a/opcodes/riscv-opc.c
++++ b/opcodes/riscv-opc.c
+@@ -3587,6 +3587,9 @@ const struct riscv_opcode riscv_opcodes[] =
+ {"mips.sdp", 0, INSN_CLASS_XMIPSLSP, "t,r,Xm^(s)", MATCH_MIPS_SDP, MASK_MIPS_SDP, match_opcode, 0 },
+ {"mips.swp", 0, INSN_CLASS_XMIPSLSP, "t,r,Xm&(s)", MATCH_MIPS_SWP, MASK_MIPS_SWP, match_opcode, 0 },
+ 
++/* Custom RISC-V extension: Rotate Right */
++{ "ror",  0, INSN_CLASS_I, "d,s,t", MATCH_ROR, MASK_ROR, match_opcode, 0 },
++
+ /* Terminate the list.  */
+ {0, 0, INSN_CLASS_NONE, 0, 0, 0, 0, 0}
+ };
